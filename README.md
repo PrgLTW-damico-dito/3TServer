@@ -1,4 +1,4 @@
-<img width="12%" src="immaginiSchermate/logo.jpeg" align="right">
+<img width="12%" src="img/logo.jpeg" align="right">
 
 >*Linguaggi e tecnologie per il web (Prof: Riccardo Rosati)<br/>
 >D'Amico Martina, Dito Andrea*
@@ -39,21 +39,21 @@ Una volta terminata la partita l'utente può:
 Vi si accede non appena si entra nell'applicazione o cliccando il pulsante di logout dalla schermata di scelta dello sfidante.
 Ha due campi compilabili (*username* e *password*) e due bottoni da poter cliccare (*login* e *signin*). Cliccando su *login* si accede alla schermata di scelta dello sfidante. Cliccando su *signin* si accede alla schermata di registrazione.
 
-![Schermata Login](immaginiSchermate/Picture1.png)
+![Schermata Login](img/Picture1.png)
 
 ### 2-Schermata di registrazione
 Vi si accede cliccando su sign-in nella schermata di login
 Ha 4 campi compilabili (Nome, Cognome, Email e Profile picture).
 Ha 3 bottoni cliccabili (Sfoglia, Annulla e registrati). Sfoglia permette di cercare fra i file del proprio pc l’immagine di profilo. Annulla riporta alla schermata di login. Registrati porta alla schermata di scelta dello sfidante.
 
-![Schermata registrazione](immaginiSchermate/Picture2.png)
+![Schermata registrazione](img/Picture2.png)
 ### 3-Schermata di scelta dello sfidante
 Vi si accede cliccando login dalla schermata di login, oppure registrati dalla schermata di registrazione, oppure nuovo sfidante dalla schermata di gioco.
 Ha 3 pulsanti cliccabili, quello di profilo, che porta alla schermata di profilo e quello di logout, che porta alla schermata di login. L’ultimo pulsante è quello di sfida, situato accanto ad ogni giocatore online, e porta alla schermata di gioco (una volta cliccato fará comparire un popup con scritto “Giocatore x ti ha proposto una sfida!”, con pulsanti accetta e rifiuta nella schermata dell’avversario. Fará invece comparire “Sfida proposta” al posto del pulsante sfida nella schermata del giocatore).
 
 Il resto della schermata è volto a indicare ogni giocatore online. Di ogni giocatore viene fatto vedere l’username e lo status (Online, In partita e offline) (preferibilmente seguendo quest’ordine, di modo da avere tutti i giocatori sfidabili ad inizio pagina).
 
-![Schermata di scelta dello sfidante](immaginiSchermate/Picture3.png)
+![Schermata di scelta dello sfidante](img/Picture3.png)
 
 ### 4-Schermata di gioco
 Vi si accede cliccando il pulsante sfida da Schermata di scelta dello sfidante.
@@ -61,14 +61,14 @@ A partita terminata compare un popup che dice “Hai vinto!”.
 
 Dopo la partita si “abilitano” i pulsanti sfida di nuovo e nuovo sfidante. Cliccando su nuovo sfidante si torna alla schermata di scelta dello sfidante. Cliccando sfida di nuovo l’avversario riceve un popup: “L’avversario ti ha sfidato!” “Accetta” “Rifiuta”.
 
-![Schermata di gioco](immaginiSchermate/Picture4.png)
+![Schermata di gioco](img/Picture4.png)
 
 ### 5-Schermata di profilo
 Vi si accede cliccando profilo dalla schermata di scelta dello sfidante.
 Mostra le informazioni sull’utente, permettendone la modifica mediante l’apposito pulsante.
 Quando si vuole clicca il pulsante modifica compare un popup con i 3 campi compilabili (ad esempio) “Vecchia password” “Nuova password” “Conferma nuova password”
 
-![Schermata di profilo](immaginiSchermate/Picture5.png)
+![Schermata di profilo](img/Picture5.png)
 
 
 ## Lato server (back-end)
