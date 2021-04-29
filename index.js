@@ -21,6 +21,5 @@ app.all("*", (req,res) => {
     res.status(400).send(util.parseMsg("endpoints non esistente", "error"))
 });
 
-app.listen(3000, () => {
-    console.log("server listening on port 3000");
-})
+
+app.listen(process.env.PORT || 3000);
