@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const  db = require('./queries');
+const  db = require('./utentiDB.js');
 const util = require('./util.js');
 
 app.use(express.json());
