@@ -29,8 +29,11 @@ exports.getUserById = (req, res) => {
     const id = parseInt(req.params.id);
     
     pool.query('SELECT id, username, stato FROM utente WHERE id = $1', [id], (error, results) => {
-        if(error){
+        if(error, results){
             res.status(400).send(util.parseMsg(error.message));
+        }
+        else if (results.rowCount === 0){
+            res.status(401).send(util.parseMsg("Utente non esistente"));
         }
         else
             res.status(200).json(results.rows[0]);
