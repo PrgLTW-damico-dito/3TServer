@@ -29,7 +29,7 @@ exports.getUserById = (req, res) => {
     const id = parseInt(req.params.id);
     
     pool.query('SELECT id, username, stato FROM utente WHERE id = $1', [id], (error, results) => {
-        if(error, results){
+        if(error){
             res.status(400).send(util.parseMsg(error.message));
         }
         else if (results.rowCount === 0){
