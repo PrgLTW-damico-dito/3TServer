@@ -5,7 +5,7 @@ const util = require('./util.js');
 
 app.use(express.json());
 
-app.get('/utenti/all', db.getUsers);
+app.get('/utenti', db.getUsers);
 app.get('/utenti/:id([0-9]*)', db.getUserById);
 
 

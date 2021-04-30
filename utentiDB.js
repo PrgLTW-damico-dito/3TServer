@@ -33,7 +33,7 @@ exports.getUserById = (req, res) => {
             res.status(400).send(util.parseMsg(error.message));
         }
         else
-            res.status(200).json(results.rows);
+            res.status(200).json(results.rows[0]);
     });
 }
 
