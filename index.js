@@ -1,21 +1,28 @@
 const express = require('express');
 const app = express();
-const  db = require('./utentiDB.js');
+const  dbUtenti = require('./utentiDB.js');
 const util = require('./util.js');
+const dbPartite = require('./partiteDB.js');
 
 app.use(express.json());
 
-app.get('/utenti', db.getUsers);
-app.get('/utenti/:id([0-9]*)', db.getUserById);
+//UTENTE
+app.get('/utenti', dbUtenti.getUsers);
+app.get('/utenti/:id([0-9]*)', dbUtenti.getUserById);
+app.post('/utenti', dbUtenti.createUser);
+app.put('/utenti/login', dbUtenti.postUserLogin);
+app.put('/utenti', dbUtenti.updateUser);
+app.put('/utenti/logout', dbUtenti.updateStateLogout);
+app.delete('/utenti', dbUtenti.deleteUser);
 
 
-app.post('/utenti', db.createUser);
 
-app.put('/utenti/login', db.postUserLogin);
-app.put('/utenti', db.updateUser);
-app.put('/utenti/logout', db.updateStateLogout);
+//PARTITA
+app.get('/partite', dbPartite.getPartite);
+app.get('/partite/:id', dbPartite.getPartitaById);
+app.post('/partite', dbPartite.createPartita);
+app.put('/partite', dbPartite.putMove);
 
-app.delete('/utenti', db.deleteUser);
 
 app.all("*", (req,res) => {
     res.status(400).send(util.parseMsg("endpoints non esistente", "error"))
