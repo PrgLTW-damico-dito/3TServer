@@ -2,17 +2,17 @@ const pool = require('./managerDB.js');
 const util = require('./util.js');
 
 exports.getPartite = (req, res) => {
-     pool.query('SELECT * FROM partita WHERE risultato = $1', [0],
+     pool.query('SELECT * FROM partita WHERE risultato = 0',
                 (error, results) => {
 
-                    if(error){
-                        res.status(400).send(util.parseMsg(error.message));
-                    }
-                    else{
-                        res.status(200).json(results.rows);
-                    }
+        if(error){
+            res.status(400).send(util.parseMsg(error.message));
+        }
+        else{
+            res.status(200).json(results.rows);
+        }
 
-                });
+    });
 }
 
 exports.getPartitaById = (req, res) => {
@@ -20,16 +20,16 @@ exports.getPartitaById = (req, res) => {
 
     pool.query('SELECT * FROM partita WHERE id = $1', [id],
                 (error, results) => {
-                    if(error){
-                        res.status(400).send(util.parseMsg(error.message));
-                    }
-                    else if(results.rowCount === 0){
-                        res.status(401).send(util.parseMsg("Partita non trovata"));
-                    }
-                    else{
-                        res.status(200).json(results.rows[0]);
-                    }
-        });
+        if(error){
+            res.status(400).send(util.parseMsg(error.message));
+        }
+        else if(results.rowCount === 0){
+            res.status(401).send(util.parseMsg("Partita non trovata"));
+        }
+        else{
+            res.status(200).json(results.rows[0]);
+        }
+    });
 }
 
 exports.createPartita = (req, res) => {

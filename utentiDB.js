@@ -59,14 +59,14 @@ exports.updateUser = (req, res) => {
     pool.query('UPDATE utente SET password = $1 WHERE username = $2 RETURNING id, username, stato', 
                 [password, username],
                 (error, results) => {
-                    
-                    if(error){
-                        res.status(400).send(util.parseMsg(error.message));
-                    }
-                    else if(results.rowCount === 0) 
-                        res.status(401).send(util.parseMsg("utente non trovato"));
-                    else
-                        res.status(200).send(results.rows[0]);
+        
+        if(error){
+            res.status(400).send(util.parseMsg(error.message));
+        }
+        else if(results.rowCount === 0) 
+            res.status(401).send(util.parseMsg("utente non trovato"));
+        else
+            res.status(200).send(results.rows[0]);
     });
 }
 
@@ -95,26 +95,26 @@ exports.postUserLogin = (req, res) => {
 function checkPassword(username, password, res){
     pool.query('SELECT id, username, stato FROM utente WHERE password = $1 AND username = $2',
                  [password, username],(error, results) => {
-            if(error)
-                res.status(400).send(util.parseMsg(error.message));
-            
-            else if (results.rowCount === 0){
-                res.status(401).send(parseMsg("password non corretta"));
-            }
-            else{
-                changeState(username);
-                res.status(200).json(results.rows[0]);
-            }    
+        if(error)
+            res.status(400).send(util.parseMsg(error.message));
+        
+        else if (results.rowCount === 0){
+            res.status(401).send(parseMsg("password non corretta"));
+        }
+        else{
+            changeState(username);
+            res.status(200).json(results.rows[0]);
+        }    
 
     });
 }
 
 function changeState(username) {
-    pool.query('UPDATE utente SET stato = $1 WHERE username = $2',[1, username],
+    pool.query('UPDATE utente SET stato = 1 WHERE username = $1',[ username],
                 (error) => {
-                if(error)
-                    res.status(400).send(util.parseMsg(error.message));
-                });
+        if(error)
+            res.status(400).send(util.parseMsg(error.message));
+        });
 }
 
 //PUT update state 
@@ -123,17 +123,17 @@ exports.updateStateLogout = (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
-    pool.query('UPDATE utente SET stato = $1 WHERE username = $2 AND password = $3',
-                [0, username, password],
+    pool.query('UPDATE utente SET stato = 0 WHERE username = $2 AND password = $3',
+                [username, password],
                 (error, results) => {
-                if(error){
-                    res.status(400).send(util.parseMsg(error.message));
-                }
-                else if (results.rowCount === 0){
-                    res.status(401).send(util.parseMsg("utente non riconosciuto"));
-                } 
-                else
-                    res.status(200).send(util.parseMsg("utente disconnesso"));
+        if(error){
+            res.status(400).send(util.parseMsg(error.message));
+        }
+        else if (results.rowCount === 0){
+            res.status(401).send(util.parseMsg("utente non riconosciuto"));
+        } 
+        else
+            res.status(200).send(util.parseMsg("utente disconnesso"));
 
     });
 }
@@ -147,14 +147,14 @@ exports.deleteUser = (req, res) => {
     pool.query('DELETE FROM utente WHERE username = $1 AND password = $2',
                 [username, password],
                 (error, results) =>{
-                    if(error){
-                        res.status(400).send(util.parseMsg(error.message));
-                    }
-                    else if(results.rowCount === 0){
-                        res.status(401).send(util.parseMsg("utente non esistente"));    
-                    }
-                    else
-                        res.status(200).send(util.parseMsg("utente rimosso con successo"));
-                });
+        if(error){
+            res.status(400).send(util.parseMsg(error.message));
+        }
+        else if(results.rowCount === 0){
+            res.status(401).send(util.parseMsg("utente non esistente"));    
+        }
+        else
+            res.status(200).send(util.parseMsg("utente rimosso con successo"));
+    });
 }
 
