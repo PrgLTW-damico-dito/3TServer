@@ -3,8 +3,10 @@ const app = express();
 const  dbUtenti = require('./utentiDB.js');
 const util = require('./util.js');
 const dbPartite = require('./partiteDB.js');
+const cors = require('cors');
 
 app.use(express.json());
+app.use(cors());
 
 //UTENTE
 app.get('/utenti', dbUtenti.getUsers);
