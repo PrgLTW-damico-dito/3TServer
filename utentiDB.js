@@ -93,7 +93,7 @@ exports.postUserLogin = (req, res) => {
 //verifico se password corrisponde
 //cambio lo stato dell'utente in online(1)
 function checkPassword(username, password, res){
-    pool.query('SELECT id, username, stato FROM utente WHERE password = $1 AND username = $2',
+    pool.query('SELECT id, username, stato, vinte, perse, patte FROM utente WHERE password = $1 AND username = $2',
                  [password, username],(error, results) => {
         if(error)
             res.status(400).send(util.parseMsg(error.message));
