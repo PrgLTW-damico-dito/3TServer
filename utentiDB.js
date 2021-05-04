@@ -99,7 +99,7 @@ function checkPassword(username, password, res){
             res.status(400).send(util.parseMsg(error.message));
         
         else if (results.rowCount === 0){
-            res.status(401).send(parseMsg("password non corretta"));
+            res.status(401).send(util.parseMsg("password non corretta"));
         }
         else{
             changeState(username);
