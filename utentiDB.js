@@ -36,26 +36,21 @@ exports.createUser = (req, res) => {
     console.log("createUser");
     const username = req.body.username;
     const password = req.body.password;
-    if ( password==undefined && username == undefined)
-        res.status(401).send(util.parseMsg("ATTENZIONE username password mancante"));
-    else if (username == undefined)
-        res.status(401).send(util.parseMsg("ATTENZIONE username mancante"));
-    else if (password == undefined)
-        res.status(401).send(util.parseMsg("ATTENZIONE password mancante"));
-    else{
-        pool.query( `INSERT INTO utente (username, password) VALUES ($1, $2)
-                    RETURNING username, stato`,
-                    [username, password], 
-                    (error, results) => {
-                        
-            if(error){
-                res.status(400).send(util.parseMsg(error.message));
-            }
-            
-            else
-                res.status(200).json(results.rows[0]);
-        });
-    }
+    
+
+    pool.query( `INSERT INTO utente (username, password) VALUES ($1, $2)
+                RETURNING username, stato`,
+                [username, password], 
+                (error, results) => {
+                    
+        if(error){
+            res.status(400).send(util.parseMsg(error.message));
+        }
+        
+        else
+            res.status(200).json(results.rows[0]);
+    });
+    
 }
 
 //PUT udated data in existing user
