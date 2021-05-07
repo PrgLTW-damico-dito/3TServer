@@ -13,7 +13,16 @@ exports.getUsers = (req, res) => {
             res.status(200).json(results.rows);
     });
 }
-
+exports.getTotUser = (req, res) => {
+    
+    pool.query('SELECT count(*) FROM utente ', (error, results) =>{
+        if(error){
+            res.status(400).send(util.parseMsg(error.message));
+        }
+        else
+            res.status(200).json(results.rows);
+    });
+}
 //GET users by ID
 exports.getUserById = (req, res) => {
     console.log("getUserById");
