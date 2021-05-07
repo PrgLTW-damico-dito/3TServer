@@ -5,7 +5,7 @@ const util = require('./util.js');
 //GET all users
 exports.getUsers = (req, res) => {
     console.log("getUser");
-    pool.query('SELECT id, username, stato, perse, vinte, patte FROM utente WHERE stato > 0', (error, results) =>{
+    pool.query('SELECT id, username, stato, perse, vinte, patte FROM utente ', (error, results) =>{
         if(error){
             res.status(400).send(util.parseMsg(error.message));
         }

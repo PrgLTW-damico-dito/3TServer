@@ -64,7 +64,7 @@ Tutte le informazioni trasmesse e restituite dal server vengono trasmesse in for
 
 |Url|metodo|descrizione|
 |---|------|-----------|
-|`utenti`|`get`|restituisce un vettore degli utenti on line|
+|`utenti`|`get`|restituisce un vettore di tutti gli utenti iscritti|
 |`utenti/{id}`|`get`|restituisce informazioni sull'utente|
 |`utenti`|`post`|aggiunge un nuovo utente e restituisce l'oggetto json dell'utente<br>Parametri richiesti: username e password|
 |`utenti`|`put`|modifica attributi dell'utente e restituisce l'oggetto json dell'utente<br>Attributi modificabili: password|
