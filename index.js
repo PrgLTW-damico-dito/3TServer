@@ -10,7 +10,6 @@ app.use(cors());
 
 //UTENTE
 app.get('/utenti', dbUtenti.getUsers);
-app.get('/utenti/tot', dbUtenti.getTotUser);
 app.get('/utenti/:id([0-9]*)', dbUtenti.getUserById);
 app.post('/utenti', dbUtenti.createUser);
 app.put('/utenti/login', dbUtenti.postUserLogin);
