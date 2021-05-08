@@ -1,12 +1,17 @@
 const express = require('express');
-const app = express();
 const  dbUtenti = require('./utentiDB.js');
 const util = require('./util.js');
 const dbPartite = require('./partiteDB.js');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
+
+const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
+
+
 
 //UTENTE
 app.get('/utenti', dbUtenti.getUsers);

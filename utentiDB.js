@@ -88,8 +88,11 @@ exports.postUserLogin = (req, res) => {
             
             res.status(401).send(util.parseMsg("utente non registrato"));
         }
-        else
+        else{
             checkPassword(username, password, res);
+            res.cookie('name', results.rows[0].id);
+            
+        }
     });
 }
 
@@ -107,6 +110,7 @@ function checkPassword(username, password, res){
         else{
             changeState(username);
             res.status(200).json(results.rows[0]);
+            
         }    
 
     });
@@ -126,18 +130,21 @@ exports.updateStateLogout = (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
-    pool.query('UPDATE utente SET stato = 0 WHERE username = $2 AND password = $3',
+    pool.query('UPDATE utente SET stato = 0 WHERE username = $1 AND password = $2 RETURNING id',
                 [username, password],
                 (error, results) => {
+                    
         if(error){
             res.status(400).send(util.parseMsg(error.message));
         }
         else if (results.rowCount === 0){
             res.status(401).send(util.parseMsg("utente non riconosciuto"));
         } 
-        else
+        else{
+            
             res.status(200).send(util.parseMsg("utente disconnesso"));
-
+            
+        }
     });
 }
 
@@ -156,8 +163,10 @@ exports.deleteUser = (req, res) => {
         else if(results.rowCount === 0){
             res.status(401).send(util.parseMsg("utente non esistente"));    
         }
-        else
+        else{
+            res.clearCookie(results.rows[0].id);
             res.status(200).send(util.parseMsg("utente rimosso con successo"));
+        }
     });
 }
 
