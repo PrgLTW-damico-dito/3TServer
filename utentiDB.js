@@ -90,7 +90,7 @@ exports.postUserLogin = (req, res) => {
         }
         else{
             checkPassword(username, password, res);
-            res.cookie('name', results.rows[0].id);
+            res.cookie('id', results.rows[0].id);
             
         }
     });
