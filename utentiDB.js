@@ -4,14 +4,37 @@ const util = require('./util.js');
 
 //GET all users
 exports.getUsers = (req, res) => {
+    let payload={
+        utenti : undefined,
+        partita : undefined
+    };
     console.log("getUser");
-    pool.query('SELECT id, username, stato, perse, vinte, patte FROM utente ', (error, results) =>{
+    pool.query('SELECT id, username, stato, perse, vinte, patte FROM utente ', (error, res1) =>{
         if(error){
             res.status(400).send(util.parseMsg(error.message));
+            return;
         }
-        else
-            res.status(200).json(results.rows);
+        else{
+            const id = req.cookies.id;
+            console.log(id);
+            pool.query('SELECT * FROM partita WHERE idO = $1 AND risultato = 0', [id],
+            (error, res2) => {
+                if(error){
+                    res.status(400).send(util.parseMsg(error.message));
+                    return;
+                }
+                else if (res2.rowCount != 0){
+                    payload.partita = res2.rows[0];
+
+                }
+                payload.utenti = res1.rows;
+                res.status(200).json(payload);
+            })
+            
+            
+        }
     });
+
 }
 
 //GET users by ID

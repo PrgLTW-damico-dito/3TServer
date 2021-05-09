@@ -54,7 +54,7 @@ Tutte le informazioni trasmesse e restituite dal server vengono trasmesse in for
 |idX|intero|identificativo del giocatore X|
 |idO|intero|identificativo del giocatore con O|
 |mossa|stringa|stringa di 9 caratteri|
-|risultato|intero|risultato della partita|
+|risultato|intero|risultato della partita<br>0: partita iniziata o in corso<br>1:vince X<br>2: vince O<br>3: patta|
 |dataOra|timestamp|data e ora della partita|
 
 
@@ -81,7 +81,7 @@ Tutte le informazioni trasmesse e restituite dal server vengono trasmesse in for
 |---|------|-----------|
 |`partite`|`get`|restituisce un vettore delle partite in corso|
 |`partite/{id}`|`get`|restituisce dettagli sulla partita identificata dal suo id|
-|`partite`|`post`|crea una nuova partita<br>Parametri richiesti: id degli utenti che giocano, id1 e id2|
+|`partite`|`post`|crea una nuova partita<br>Parametri richiesti: id degli utenti che giocano, id1 e id2.<br>Utente con id1 è sempre quello che lancia la sfida, quindi chi sfida giochera con la X|
 |`partite`|`put`|indica la mossa appena effettuata<br>Parametri richiesti: id_partita e numero della casella.<br>Quindi oggetto json di questo tipo { "id": ..., "mossa": ...}<br>I numeri delle caselle del tris vengono numerati da 0 a 8 partendo dalla casella in alto a sinistra|
 
 

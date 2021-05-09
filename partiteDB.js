@@ -36,6 +36,16 @@ exports.createPartita = (req, res) => {
     const id1 = req.body.id1;
     const id2 = req.body.id2;
 
+    console.log(req.cookies);
+    
+    if (!(req.cookies)){
+        res.status(400).send(util.parseMsg("id utente non loggato!"));
+        return; 
+    }
+    else if ( req.cookies.id != id1 ) {
+        res.status(400).send(util.parseMsg("id utente che sfida non corretto!"));
+        return; 
+    }
     if(id1 === id2){
         res.status(400).send(util.parseMsg("un utente non può giocare con se stesso"));
         return;
@@ -79,10 +89,6 @@ exports.createPartita = (req, res) => {
 
 }
 
-
-function changeStato(id1, id2, res) {
-    
-}
 
 
 
