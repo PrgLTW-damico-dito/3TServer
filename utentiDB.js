@@ -4,9 +4,11 @@ const util = require('./util.js');
 
 //GET all users
 exports.getUsers = (req, res) => {
+    const idUser = req.query.id;
+   
     let payload={
         utenti : undefined,
-        partita : undefined
+        partita : undefined,
     };
     console.log("getUser");
     pool.query('SELECT id, username, stato, perse, vinte, patte FROM utente ', (error, res1) =>{
@@ -15,11 +17,12 @@ exports.getUsers = (req, res) => {
             return;
         }
         else{
-            const id = req.cookies.id;
-            console.log(id);
-            pool.query('SELECT * FROM partita WHERE idO = $1 AND risultato = 0', [id],
+            console.log(idUser);
+            pool.query(`SELECT * FROM partita WHERE 
+                risultato = 0 AND (idx = $1 OR ido = $1) AND mossa = '000000000'`,[idUser],
             (error, res2) => {
                 if(error){
+                    console.log(error);
                     res.status(400).send(util.parseMsg(error.message));
                     return;
                 }
@@ -29,6 +32,7 @@ exports.getUsers = (req, res) => {
                 }
                 payload.utenti = res1.rows;
                 res.status(200).json(payload);
+                return;
             })
             
             
@@ -165,7 +169,7 @@ exports.updateStateLogout = (req, res) => {
         } 
         else{
             
-            res.status(200).send(util.parseMsg("utente disconnesso"));
+            res.status(200).send(util.parseMsg("utente disconnesso", {username: username}));
             
         }
     });
