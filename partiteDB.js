@@ -50,7 +50,7 @@ exports.createPartita = (req, res) => {
         res.status(400).send(util.parseMsg("un utente non può giocare con se stesso"));
         return;
     }
-    pool.query(`SELECT *
+    pool.query(`SELECT u1.username as userx, u2.username as usero
         FROM utente u1, utente u2 
         WHERE (u1.id = $1 AND u1.stato = 1) 
                 AND (u2.id = $2 AND u2.stato = 1) `, [id1, id2],
@@ -64,8 +64,11 @@ exports.createPartita = (req, res) => {
             res.status(400).send(util.parseMsg("impossibile creare partita, giocatori offline, non esistenti oppure partita in corso"));
             return;
         }
-        pool.query(`INSERT INTO partita (idX, idO) VALUES ($1, $2)
-                    RETURNING id, idX, idO, mossa, risultato, dataOra`, [id1, id2],
+    
+        let userX = results.rows[0].userx;
+        let userO = results.rows[0].usero;
+        pool.query(`INSERT INTO partita (idX, idO, userx, usero) VALUES ($1, $2, $3, $4)
+                    RETURNING id, idX, idO, userx, usero, mossa, risultato, dataOra`, [id1, id2, userX, userO],
                     (error, results) => {
                         
             if(error){
