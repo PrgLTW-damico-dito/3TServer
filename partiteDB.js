@@ -188,7 +188,8 @@ function checkPlay( arr, mossa, seq){
 function checkWinner(mossa, arr, seq) {
    
     let row = parseInt(mossa/3);
-    let col = mossa%3;
+    let col = parseInt(mossa%3);
+    console.log("row: " + row + " col: " + col);
 
     //contorollo righe
     if (checkRow(row, arr, seq)) return true;
@@ -217,10 +218,8 @@ function checkRow(r, arr, seq){
     for(let c=0; c<3; c++){
         let index_cell=(r+c)+(r*2);
         if(arr[index_cell] == 0) return false;
-        count += parseInt(arr[index_cell]);
+        if(!checkValue(parseInt(arr[index_cell]), seq)) return false;
     }
-    console.log(count);
-    if (!checkCount(count, seq)) return false;
     return true;
 }
 
@@ -230,10 +229,8 @@ function checkCol(c, arr, seq){
     for(let r=0; r<3; r++){
         let index_cell=(r+c)+(r*2)
         if(arr[index_cell] == 0) return false;
-        count += parseInt(arr[index_cell]);
+        if(!checkValue(parseInt(arr[index_cell]), seq)) return false;
     }
-
-    if (!checkCount(count, seq)) return false;
     return true;
 }
 
@@ -243,16 +240,18 @@ function checkDiag(start, end, step, arr, seq){
     
      for(let d = start; d<end; d+=step){
             if(arr[d] == 0) return false;
-            count += parseInt(arr[d]);;
+            if(!checkValue(parseInt(arr[d]), seq)) return false;
             
         }
-    if (!checkCount(count, seq)) return false;
     return true;
 }
 
-function checkCount(count, seq){
+function checkValue(value, seq){
     
-    if(seq%2 == 0 && count%2 != 0) return false;
-    if(seq%2 != 0 && count%2 == 0) return false;
-    return true;
+    if( (seq%2 == 0 && value%2 != 0) || (seq%2 != 0 && value%2 == 0)){
+        console.log("[false] value: ", value, " seq: ", seq);
+        return false;
+    } 
+    console.log("[true] value: ", value, " seq: ", seq);
+        return true;
 }
