@@ -17,7 +17,10 @@ exports.getPartite = (req, res) => {
 
 exports.getPartitaById = (req, res) => {
     const id = parseInt(req.params.id);
+    const clientId = req.query.id;
 
+    clientTimeOut.set(clientId, Date.now());
+    
     pool.query('SELECT * FROM partita WHERE id = $1', [id],
                 (error, results) => {
         if(error){
@@ -158,6 +161,39 @@ exports.putMove = (req, res) => {
         });
     });
             
+}
+function updateUtenteVittoria(vintoId, persoId){
+    pool.query(`UPDATE utente SET vinte = vinte+1, stato=1 WHERE id = $1`, [vintoId], (error) => {
+        if(error) console.log("ERROR: ", error);
+    });
+    pool.query(`UPDATE utente SET perse = perse +1, stato = 0 WHERE id = $1`, [persoId], (error) => {
+        if(error) console.log("ERROR: ", error);
+    });
+}
+exports.assegnaVittoria = clientId => {
+    pool.query(`UPDATE partita SET risultato=2 WHERE idx = $1 AND risultato=0 RETURNING ido`,
+            [clientId],
+            (error, results) => {
+        
+        if(error) console.log("ERROR: ", error);
+        else if (results.rowCount == 1){
+            console.log(results.rows[0].ido);
+            updateUtenteVittoria(results.rows[0].ido, clientId);
+        }
+    });
+
+    pool.query(`UPDATE partita SET risultato=1 WHERE ido = $1 AND risultato=0 RETURNING idx`,
+            [clientId],
+            (error, results) => {
+        if(error) console.log("ERROR: ", error);
+        else if (results.rowCount == 1){
+            console.log(results.rows[0].idx);
+            updateUtenteVittoria(results.rows[0].idx, clientId);
+        }
+    });
+
+    clientTimeOut.delete(clientId);
+
 }
 function changeScore(winner, loser, res){
     pool.query(`UPDATE utente SET  vinte = vinte+1, stato = 1 WHERE id = $1 `,

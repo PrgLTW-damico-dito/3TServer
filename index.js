@@ -11,7 +11,18 @@ app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
 
+global.clientTimeOut = new Map();
 
+setInterval(() => {
+    clientTimeOut.forEach( (element, key) => {
+        const delta = (Date.now() - element)/1000;
+        console.log(`id: ${key} delta: ${delta}` );
+        if (delta > 20 ){
+            dbPartite.assegnaVittoria(key);
+        }
+
+    });
+}, 10000);
 
 //UTENTE
 app.get('/utenti', dbUtenti.getUsers);

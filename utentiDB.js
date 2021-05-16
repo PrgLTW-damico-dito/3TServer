@@ -11,6 +11,7 @@ exports.getUsers = (req, res) => {
         partita : undefined,
     };
     console.log("getUser");
+    pool.query('UPDATE utente SET stato = 1 WHERE id = $1', [idUser]);
     pool.query('SELECT id, username, stato, perse, vinte, patte FROM utente ', (error, res1) =>{
         if(error){
             res.status(400).send(util.parseMsg(error.message));
