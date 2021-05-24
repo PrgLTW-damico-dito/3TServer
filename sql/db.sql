@@ -25,5 +25,5 @@ create table partita(
 
 SELECT * FROM utente
 SELECT * FROM partita
-
+delete  from partita
 UPDATE partita set mossa = '000000000', risultato=0 where id = 2

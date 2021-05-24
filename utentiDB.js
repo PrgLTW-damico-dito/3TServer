@@ -72,7 +72,7 @@ exports.createUser = (req, res) => {
                 (error, results) => {
                     
         if(error){
-            res.status(400).send(util.parseMsg(error.message));
+            res.status(400).send(util.parseMsg("Utente gia esistente"));
         }
         
         else
