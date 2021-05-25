@@ -97,7 +97,7 @@ exports.updateUser = (req, res) => {
         else if(results.rowCount === 0) 
             res.status(401).send(util.parseMsg("utente non trovato"));
         else
-            res.status(200).send(results.rows[0]);
+            res.status(200).send(util.parseMsg("Password cambiata correttamente!"));
     });
 }
 
