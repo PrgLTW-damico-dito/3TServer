@@ -3,13 +3,15 @@ const  dbUtenti = require('./utentiDB.js');
 const util = require('./util.js');
 const dbPartite = require('./partiteDB.js');
 const cors = require('cors');
-const cookieParser = require('cookie-parser');
+
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
-app.use(cookieParser());
+
+global.clientChat = new Map();
+global.chatArr = new Array();
 
 global.clientTimeOut = new Map();
 
@@ -37,9 +39,10 @@ app.delete('/utenti', dbUtenti.deleteUser);
 
 //PARTITA
 app.get('/partite', dbPartite.getPartite);
-app.get('/partite/:id', dbPartite.getPartitaById);
+app.get('/partite/:id([0-9]*)', dbPartite.getPartitaById);
 app.post('/partite', dbPartite.createPartita);
 app.put('/partite', dbPartite.putMove);
+app.put('/partite/chat', dbPartite.putMessage);
 
 
 app.all("*", (req,res) => {

@@ -18,7 +18,10 @@ exports.getPartite = (req, res) => {
 exports.getPartitaById = (req, res) => {
     const id = parseInt(req.params.id);
     const clientId = req.query.id;
-
+    let payload = {
+        chat: undefined,
+        partita: undefined
+    }
     clientTimeOut.set(clientId, Date.now());
     
     pool.query('SELECT * FROM partita WHERE id = $1', [id],
@@ -30,7 +33,10 @@ exports.getPartitaById = (req, res) => {
             res.status(401).send(util.parseMsg("Partita non trovata"));
         }
         else{
-            res.status(200).json(results.rows[0]);
+            payload.partita = results.rows[0];  
+            payload.chat = clientChat.get(id) ? clientChat.get(id) : [] 
+            res.status(200).json(payload); 
+
         }
     });
 }
@@ -96,7 +102,25 @@ exports.createPartita = (req, res) => {
 }
 
 
+exports.putMessage = (req, res) => {
+    const id = req.body.id;
+    const id_player = req.body.id_player;
+    const msg = req.body.msg;
 
+    pool.query('SELECT * FROM partita WHERE id = $1 AND (idx = $2 OR ido=$2)', [id, id_player], (error, results) =>{
+        if(error){
+            res.status(400).send(util.parseMsg(error.message));
+            return;
+        }
+        if(results.rowCount === 0){
+            res.status(401).send(util.parseMsg("partita inesistente oppure giocatore non in partita"));
+            return;
+        }
+        
+        res.status(200).json(util.setClientChat(id, id_player, msg));
+    })
+
+}
 
 exports.putMove = (req, res) => {
     const id = req.body.id;
@@ -140,6 +164,7 @@ exports.putMove = (req, res) => {
             if(error)
                 res.status(400).send(util.parseMsg(error.message));
             else{
+                clientChat.delete(id);
                 res.status(200).json(results.rows[0]);
                 if(risultato == 1){
                     changeScore(results.rows[0].idx, results.rows[0].ido, res);
@@ -294,3 +319,4 @@ function checkValue(value, seq){
     console.log("[true] value: ", value, " seq: ", seq);
         return true;
 }
+
