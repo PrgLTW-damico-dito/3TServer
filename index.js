@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 global.clientChat = new Map();
-global.chatArr = new Array();
+
 
 global.clientTimeOut = new Map();
 

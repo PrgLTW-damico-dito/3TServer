@@ -86,15 +86,13 @@ exports.createPartita = (req, res) => {
             }
             
             pool.query(`UPDATE utente SET stato = 2 WHERE id=$1 or id = $2 `, [id1, id2],
-            (error) => {
-                if(error){
-                    res.status(400).send(util.parseMsg(error.message));
-                    return;
-                }
+                (error) => {
+                    if(error){
+                        res.status(400).send(util.parseMsg(error.message));
+                        return;
+                    }
+                    res.status(200).json(results.rows[0]);
             });
-            res.status(200).json(results.rows[0]);
-            
-        
         });
         
     });
@@ -107,7 +105,7 @@ exports.putMessage = (req, res) => {
     const id_player = req.body.id_player;
     const msg = req.body.msg;
 
-    pool.query('SELECT * FROM partita WHERE id = $1 AND (idx = $2 OR ido=$2)', [id, id_player], (error, results) =>{
+    pool.query('SELECT * FROM partita WHERE id = $1 AND (idx = $2 OR ido=$2) AND risultato = 0', [id, id_player], (error, results) =>{
         if(error){
             res.status(400).send(util.parseMsg(error.message));
             return;
@@ -123,6 +121,7 @@ exports.putMessage = (req, res) => {
 }
 
 exports.putMove = (req, res) => {
+    console.log("putMove");
     const id = req.body.id;
     const mossa = req.body.mossa;
     
@@ -164,23 +163,29 @@ exports.putMove = (req, res) => {
             if(error)
                 res.status(400).send(util.parseMsg(error.message));
             else{
-                clientChat.delete(id);
-                res.status(200).json(results.rows[0]);
-                if(risultato == 1){
-                    changeScore(results.rows[0].idx, results.rows[0].ido, res);
+                if(risultato == 0){
+                    res.status(200).json(results.rows[0]);
+                }        
+                else if(risultato == 1){
+                    changeScore(results.rows[0].idx, results.rows[0].ido, res, results.rows[0] );
                 }
                 else if (risultato == 2){
-                    changeScore(results.rows[0].ido, results.rows[0].idx, res)
+                    changeScore(results.rows[0].ido, results.rows[0].idx, res, results.rows[0])
 
                 }
                 else if (risultato == 3){
                     pool.query(`UPDATE utente SET patte = patte +1, stato = 1  WHERE id = $1 or id = $2 `,
                         [results.rows[0].ido, results.rows[0].idx], (error) => {
                         if(error)
-                        res.status(400).send(util.parseMsg(error.message));
+                            res.status(400).send(util.parseMsg(error.message));
+                        else{
+                            clientChat.delete(id);
+                            res.status(200).json(results.rows[0]);
+                        }
                     });
                    
                 }
+                
             }
                 
         });
@@ -220,17 +225,26 @@ exports.assegnaVittoria = clientId => {
     clientTimeOut.delete(clientId);
 
 }
-function changeScore(winner, loser, res){
+
+
+function changeScore(winner, loser, res, resRow){
     pool.query(`UPDATE utente SET  vinte = vinte+1, stato = 1 WHERE id = $1 `,
             [winner], (error) => {
         if(error)
-        res.status(400).send(util.parseMsg(error.message));
-        });
-    pool.query(`UPDATE utente SET  perse = perse+1, stato = 1 WHERE id = $1 `,
+            res.status(400).send(util.parseMsg(error.message));
+        else{
+            pool.query(`UPDATE utente SET  perse = perse+1, stato = 1 WHERE id = $1 `,
             [loser],(error) => {
-        if(error)
-        res.status(400).send(util.parseMsg(error.message));
-        });
+                if(error)
+                    res.status(400).send(util.parseMsg(error.message));
+                else{
+                    clientChat.delete(resRow.id);
+                    res.status(200).json(resRow);
+                }
+            });
+        }
+    });
+
 }
   
 function checkPlay( arr, mossa, seq){

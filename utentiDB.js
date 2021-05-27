@@ -110,17 +110,17 @@ exports.postUserLogin = (req, res) => {
                 [username], (error, results) => {
         if(error){
             res.status(400).send(util.parseMsg(error.message));
+            return;
         }
        
-        else if(results.rowCount === 0){
-            
+        if(results.rowCount === 0){
             res.status(401).send(util.parseMsg("utente non registrato"));
+            return;
         }
-        else{
-            checkPassword(username, password, res);
-            res.cookie('id', results.rows[0].id);
-            
-        }
+    
+        checkPassword(username, password, res);
+        
+        
     });
 }
 
@@ -129,17 +129,19 @@ exports.postUserLogin = (req, res) => {
 function checkPassword(username, password, res){
     pool.query('SELECT id, username, stato, vinte, perse, patte FROM utente WHERE password = $1 AND username = $2',
                  [password, username],(error, results) => {
-        if(error)
+        if(error){
             res.status(400).send(util.parseMsg(error.message));
-        
-        else if (results.rowCount === 0){
-            res.status(401).send(util.parseMsg("password non corretta"));
+            return;
         }
-        else{
-            changeState(username);
-            res.status(200).json(results.rows[0]);
-            
-        }    
+        if (results.rowCount === 0){
+            res.status(401).send(util.parseMsg("password non corretta"));
+            return;
+        }
+    
+        changeState(username);
+        res.status(200).json(results.rows[0]);
+        
+        
 
     });
 }
