@@ -176,6 +176,12 @@ exports.putMove = (req, res) => {
                         else{
                             clientChat.delete(id);
                             res.status(200).json(results.rows[0]);
+
+                            console.log("delete clientTimeout()");
+                            clientTimeOut.delete(results.rows[0].ido + '');
+                            clientTimeOut.delete(results.rows[0].idx + '');
+
+
                         }
                     });
                    
@@ -248,6 +254,12 @@ function changeScore(winner, loser, res, resRow){
                     res.status(400).send(util.parseMsg(error.message));
                 else{
                     clientChat.delete(resRow.id);
+
+                    console.log("delete clientTimeout()", idx, ido);
+                    clientTimeOut.delete(winner+'');
+                    clientTimeOut.delete(loser+'');
+    
+                    
                     res.status(200).json(resRow);
                 }
             });
