@@ -182,9 +182,9 @@ exports.putMove = (req, res) => {
                             console.log("delete clientTimeout()");
                             clientTimeOut.delete(results.rows[0].ido + '');
                             clientTimeOut.delete(results.rows[0].idx + '');
-
-
-                        }
+                            pool.query('UPDATE utente SET stato = 0 WHERE id = $1 OR id = $2', 
+                                [results.rows[0].ido, results.rows[0].idx]);
+                       }
                     });
                    
                 }
@@ -222,6 +222,10 @@ exports.assegnaVittoria = clientId => {
                 console.log("delete clientTimeout()", idx, ido);
                 clientTimeOut.delete(ido);
                 clientTimeOut.delete(idx);
+
+                pool.query('UPDATE utente SET stato = 0 WHERE id = $1 OR id = $2', 
+                    [ido, idx]);
+
             }
     });
 
@@ -237,6 +241,10 @@ exports.assegnaVittoria = clientId => {
                 console.log("delete clientTimeout()", idx, ido);
                 clientTimeOut.delete(ido);
                 clientTimeOut.delete(idx);
+
+                pool.query('UPDATE utente SET stato = 0 WHERE id = $1 OR id = $2', 
+                    [ido, idx]);
+
             }
     });
 
@@ -259,7 +267,10 @@ function changeScore(winner, loser, res, resRow){
 
                     clientTimeOut.delete(winner+'');
                     clientTimeOut.delete(loser+'');
-    
+                    
+                    pool.query('UPDATE utente SET stato = 0 WHERE id = $1 OR id = $2', 
+                    [winner, loser]);
+
                     
                     res.status(200).json(resRow);
                 }
