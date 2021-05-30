@@ -86,6 +86,8 @@ exports.createPartita = (req, res) => {
                         res.status(400).send(util.parseMsg(error.message));
                         return;
                     }
+                    clientTimeOut.set(id1 + '', Date.now());
+                    clientTimeOut.set(id2 + '', Date.now());
                     res.status(200).json(results.rows[0]);
             });
         });
