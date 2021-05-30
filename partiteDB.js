@@ -255,7 +255,6 @@ function changeScore(winner, loser, res, resRow){
                 else{
                     clientChat.delete(resRow.id);
 
-                    console.log("delete clientTimeout()", idx, ido);
                     clientTimeOut.delete(winner+'');
                     clientTimeOut.delete(loser+'');
     
