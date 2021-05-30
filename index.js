@@ -18,7 +18,7 @@ global.clientTimeOut = new Map();
 setInterval(() => {
     clientTimeOut.forEach( (element, key) => {
         const delta = (Date.now() - element)/1000;
-        console.log(`id: ${key} delta: ${delta}` );
+        console.log(`setInterval() id: ${key} delta: ${delta}` );
         if (delta > 20 ){
             dbPartite.assegnaVittoria(key);
         }

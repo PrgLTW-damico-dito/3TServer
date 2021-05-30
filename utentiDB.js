@@ -10,7 +10,7 @@ exports.getUsers = (req, res) => {
         utenti : undefined,
         partita : undefined,
     };
-    console.log("getUser");
+    console.log("getUser()", idUser);
     pool.query('UPDATE utente SET stato = 1 WHERE id = $1 and stato=0', [idUser]);
     pool.query('SELECT id, username, stato, perse, vinte, patte FROM utente ', (error, res1) =>{
         if(error){
@@ -18,7 +18,6 @@ exports.getUsers = (req, res) => {
             return;
         }
         else{
-            console.log(idUser);
             pool.query(`SELECT * FROM partita WHERE 
                 risultato = 0 AND (idx = $1 OR ido = $1) AND mossa = '000000000'`,[idUser],
             (error, res2) => {
@@ -44,8 +43,8 @@ exports.getUsers = (req, res) => {
 
 //GET users by ID
 exports.getUserById = (req, res) => {
-    console.log("getUserById");
     const id = parseInt(req.params.id);
+    console.log("getUserById()", id);
     
     pool.query('SELECT id, username, stato, perse, vinte, patte FROM utente WHERE id = $1', [id], (error, results) => {
         if(error){
@@ -61,7 +60,7 @@ exports.getUserById = (req, res) => {
 
 //POST a new users
 exports.createUser = (req, res) => {
-    console.log("createUser");
+    console.log("createUser()");
     const username = req.body.username;
     const password = req.body.password;
     
@@ -83,7 +82,7 @@ exports.createUser = (req, res) => {
 
 //PUT udated data in existing user
 exports.updateUser = (req, res) => {
-    console.log("updateUser");
+    console.log("updateUser()");
     const username = req.body.username;
     const password = req.body.password;
 
@@ -102,9 +101,9 @@ exports.updateUser = (req, res) => {
 }
 
 exports.postUserLogin = (req, res) => {
-    console.log("postUserLogin")
     const username = req.body.username;
     const password = req.body.password;
+    console.log("postUserLogin()", username, password)
     
     pool.query('SELECT * FROM utente WHERE username = $1',
                 [username], (error, results) => {
@@ -156,9 +155,9 @@ function changeState(username) {
 
 //PUT update state 
 exports.updateStateLogout = (req, res) => {
-    console.log("updateStateLogout");
     const username = req.body.username;
     const password = req.body.password;
+    console.log("updateStateLogout()", username, password);
 
     pool.query('UPDATE utente SET stato = 0 WHERE username = $1 AND password = $2 RETURNING id',
                 [username, password],
@@ -180,9 +179,9 @@ exports.updateStateLogout = (req, res) => {
 
 //DELETE a user
 exports.deleteUser = (req, res) => {
-    console.log("deleteUser");
     const username = req.body.username;
     const password = req.body.password;
+    console.log("deleteUser()", username, password);
 
     pool.query('DELETE FROM utente WHERE username = $1 AND password = $2',
                 [username, password],

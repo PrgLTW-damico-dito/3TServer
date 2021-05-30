@@ -22,22 +22,27 @@ exports.getPartitaById = (req, res) => {
         chat: undefined,
         partita: undefined
     }
-    clientTimeOut.set(clientId, Date.now());
+
     
     pool.query('SELECT * FROM partita WHERE id = $1', [id],
-                (error, results) => {
-        if(error){
-            res.status(400).send(util.parseMsg(error.message));
-        }
-        else if(results.rowCount === 0){
-            res.status(401).send(util.parseMsg("Partita non trovata"));
-        }
-        else{
-            payload.partita = results.rows[0];  
-            payload.chat = clientChat.get(id) ? clientChat.get(id) : [] 
-            res.status(200).json(payload); 
+        (error, results) => {
+            if(error){
+                res.status(400).send(util.parseMsg(error.message));
+            }
+            else if(results.rowCount === 0){
+                res.status(401).send(util.parseMsg("Partita non trovata"));
+            }
+            else{
+                payload.partita = results.rows[0];  
+                payload.chat = clientChat.get(id) ? clientChat.get(id) : [] 
+                res.status(200).json(payload);
 
-        }
+                if (payload.partita.risultato == 0){
+                    console.log('clientTimeOut setted', clientId);
+                    clientTimeOut.set(clientId, Date.now());
+                }
+
+            }
     });
 }
 
@@ -45,16 +50,6 @@ exports.createPartita = (req, res) => {
     const id1 = req.body.id1;
     const id2 = req.body.id2;
 
-    //console.log(req.cookies);
-    
-    /* if (!(req.cookies)){
-        res.status(400).send(util.parseMsg("id utente non loggato!"));
-        return; 
-    }
-    else if ( req.cookies.id != id1 ) {
-        res.status(400).send(util.parseMsg("id utente che sfida non corretto!"));
-        return; 
-    } */
     if(id1 === id2){
         res.status(400).send(util.parseMsg("un utente non può giocare con se stesso"));
         return;
@@ -192,37 +187,51 @@ exports.putMove = (req, res) => {
     });
             
 }
+
 function updateUtenteVittoria(vintoId, persoId){
-    pool.query(`UPDATE utente SET vinte = vinte+1, stato=1 WHERE id = $1`, [vintoId], (error) => {
+    console.log('updateUtenteVittoria()', vintoId, persoId);
+    pool.query(`UPDATE utente SET vinte = vinte + 1, stato = 1 WHERE id = $1`, [vintoId], (error) => {
         if(error) console.log("ERROR: ", error);
     });
-    pool.query(`UPDATE utente SET perse = perse +1, stato = 0 WHERE id = $1`, [persoId], (error) => {
+    pool.query(`UPDATE utente SET perse = perse + 1, stato = 1 WHERE id = $1`, [persoId], (error) => {
         if(error) console.log("ERROR: ", error);
     });
 }
+
 exports.assegnaVittoria = clientId => {
-    pool.query(`UPDATE partita SET risultato=2 WHERE idx = $1 AND risultato=0 RETURNING ido`,
-            [clientId],
-            (error, results) => {
+    let idx, ido;
+    pool.query(`UPDATE partita SET risultato=2 WHERE idx = $1 AND risultato=0 RETURNING idx, ido`,
+        [clientId],
+        (error, results) => {
         
-        if(error) console.log("ERROR: ", error);
-        else if (results.rowCount == 1){
-            console.log(results.rows[0].ido);
-            updateUtenteVittoria(results.rows[0].ido, clientId);
-        }
+            if(error) console.log("ERROR: ", error);
+            else if (results.rowCount == 1){
+                idx = results.rows[0].idx + '';
+                ido = results.rows[0].ido + '';
+
+                updateUtenteVittoria(results.rows[0].ido, clientId);
+
+                console.log("delete clientTimeout()", idx, ido);
+                clientTimeOut.delete(ido);
+                clientTimeOut.delete(idx);
+            }
     });
 
-    pool.query(`UPDATE partita SET risultato=1 WHERE ido = $1 AND risultato=0 RETURNING idx`,
-            [clientId],
-            (error, results) => {
-        if(error) console.log("ERROR: ", error);
-        else if (results.rowCount == 1){
-            console.log(results.rows[0].idx);
-            updateUtenteVittoria(results.rows[0].idx, clientId);
-        }
+    pool.query(`UPDATE partita SET risultato=1 WHERE ido = $1 AND risultato=0 RETURNING idx, ido`,
+        [clientId],
+        (error, results) => {
+            if(error) console.log("ERROR: ", error);
+            else if (results.rowCount == 1){
+                idx = results.rows[0].idx + '';
+                ido = results.rows[0].ido + '';
+                updateUtenteVittoria(results.rows[0].idx, clientId);
+
+                console.log("delete clientTimeout()", idx, ido);
+                clientTimeOut.delete(ido);
+                clientTimeOut.delete(idx);
+            }
     });
 
-    clientTimeOut.delete(clientId);
 
 }
 
@@ -267,7 +276,7 @@ function checkWinner(mossa, arr, seq) {
    
     let row = parseInt(mossa/3);
     let col = parseInt(mossa%3);
-    console.log("row: " + row + " col: " + col);
+    console.log(`checkWinner() row: ${row}  col: ${col}`);
 
     //contorollo righe
     if (checkRow(row, arr, seq)) return true;
@@ -290,7 +299,7 @@ function checkWinner(mossa, arr, seq) {
 
 function checkRow(r, arr, seq){
     
-    console.log("chechRow");
+    //console.log("checkRow");
     let count = 0;
     
     for(let c=0; c<3; c++){
@@ -303,7 +312,7 @@ function checkRow(r, arr, seq){
 
 function checkCol(c, arr, seq){
     let count = 0;
-    console.log("chechCol");
+    //console.log("chechCol");
     for(let r=0; r<3; r++){
         let index_cell=(r+c)+(r*2)
         if(arr[index_cell] == 0) return false;
@@ -314,7 +323,7 @@ function checkCol(c, arr, seq){
 
 function checkDiag(start, end, step, arr, seq){
     let count = 0;
-    console.log("chechDiag");
+    //console.log("chechDiag");
     
      for(let d = start; d<end; d+=step){
             if(arr[d] == 0) return false;
@@ -327,10 +336,10 @@ function checkDiag(start, end, step, arr, seq){
 function checkValue(value, seq){
     
     if( (seq%2 == 0 && value%2 != 0) || (seq%2 != 0 && value%2 == 0)){
-        console.log("[false] value: ", value, " seq: ", seq);
+        //console.log("[false] value: ", value, " seq: ", seq);
         return false;
     } 
-    console.log("[true] value: ", value, " seq: ", seq);
+    //console.log("[true] value: ", value, " seq: ", seq);
         return true;
 }
 
