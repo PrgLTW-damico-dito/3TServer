@@ -24,7 +24,7 @@ setInterval(() => {
         }
 
     });
-}, 10000);
+}, 20000);
 
 //UTENTE
 app.get('/utenti', dbUtenti.getUsers);
