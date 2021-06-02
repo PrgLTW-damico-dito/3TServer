@@ -1,5 +1,5 @@
 const Pool = require('pg').Pool
-const cs = `postgres://ciszuzhtyjsqny:3f17229e64c957e7a16d484ece156b06c7a93430646fb0cd4a010e58a97c3df5@ec2-54-155-226-153.eu-west-1.compute.amazonaws.com:5432/d9nihgkb5cqtlo`;
+const cs = `postgres://hkeceooamvidfb:650020c30ffdc43434c6dec4fcc764db573f154044cd71da2b8a94a76fe86fa1@ec2-54-228-139-34.eu-west-1.compute.amazonaws.com:5432/d6kvrhci1v2hkc`;
 const pool = new Pool({
     connectionString: cs,
     connectionTimeoutMillis: 5000,

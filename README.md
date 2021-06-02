@@ -7,7 +7,7 @@
 
 ## Specifiche
 
-Si vuole realizzare un'applicazione che consenta a due o più utenti di giocare al gioco del tic tac toe (tris). Di ogni utente è necessario conoscere l'username, la sua password ed eventualmente un'immagine.
+Si vuole realizzare un'applicazione che consenta a due o più utenti di giocare al gioco del tic tac toe (tris). Di ogni utente è necessario conoscere l'username, la sua password.
 
 L'utente una volta registrato può giocare una partita selezionando uno degli utenti online, i quali possono essere: *online*, *offline* oppure *in partita*, solo ai giocatori online è possibile inviare una proposta di sfida.
 
@@ -24,7 +24,6 @@ Del giocatore interessa sapere il numero di partite: *perse*, *vinte* e *pareggi
 
 Una volta terminata la partita l'utente può:
 
- * scegliere se giocare una nuova partita con l'avversario appena sfidato, il quale potrà accettare o meno.
  * tornare nella schemata precedente e scegliere un nuovo avversario
  * fare logout e uscire dall'applicazione
 
@@ -68,7 +67,6 @@ Tutte le informazioni trasmesse e restituite dal server vengono trasmesse in for
 |`utenti/{id}`|`get`|restituisce informazioni sull'utente|
 |`utenti`|`post`|aggiunge un nuovo utente e restituisce l'oggetto json dell'utente<br>Parametri richiesti: username e password|
 |`utenti`|`put`|modifica attributi dell'utente e restituisce l'oggetto json dell'utente<br>Attributi modificabili: password|
-|`utenti/immagine`|`put`|modifica immagine per l'utente|
 |`utenti/login`|`put`|effettua il Login e passa nello stato online e restituisce l'oggetto json dell'utente <br>Parametri richiesti: username e password|
 |`utenti/logout`|`put`|effettua il Logout e passa nello stato offline <br>Parametri richiesti: username e password|
 |`utenti`|`delete`|rimuove utente<br>Parametri richiesti: username e password|
@@ -83,5 +81,6 @@ Tutte le informazioni trasmesse e restituite dal server vengono trasmesse in for
 |`partite/{id}`|`get`|restituisce dettagli sulla partita identificata dal suo id|
 |`partite`|`post`|crea una nuova partita<br>Parametri richiesti: id degli utenti che giocano, id1 e id2.<br>Utente con id1 è sempre quello che lancia la sfida, quindi chi sfida giochera con la X|
 |`partite`|`put`|indica la mossa appena effettuata<br>Parametri richiesti: id_partita e numero della casella.<br>Quindi oggetto json di questo tipo { "id": ..., "mossa": ...}<br>I numeri delle caselle del tris vengono numerati da 0 a 8 partendo dalla casella in alto a sinistra|
+|`partite/chat`|`put`|data: { id: <id_partita>, id_player: <id_user>, msg: <messaggio> }|
 
 
