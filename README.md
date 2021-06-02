@@ -1,6 +1,6 @@
 <img width="12%" src="img/logo.jpeg" align="right">
 
->*Linguaggi e tecnologie per il web (Prof: Riccardo Rosati)<br/>
+>*Linguaggi e tecnologie per il web (Prof: Riccardo Rosati, tutor: Lorenzo Marconi)<br/>
 >D'Amico Martina, Dito Andrea*
 
 <h1>Documentazione progetto</h1>
